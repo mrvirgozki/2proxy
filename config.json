@@ -12,39 +12,39 @@
     "queryStrategy": "UseIPv4",
     "disableCache": false,
     "hosts": {
-      "pagead2.googlesyndication.com": "0.0.0.0",
-      "googlesyndication.com": "0.0.0.0",
-      "doubleclick.net": "0.0.0.0",
-      "googleadservices.com": "0.0.0.0",
-      "adservice.google.com": "0.0.0.0",
-      "adsbygoogle.com": "0.0.0.0",
-      "google-analytics.com": "0.0.0.0",
-      "googletagmanager.com": "0.0.0.0",
-      "googletagservices.com": "0.0.0.0",
-      "googleads.g.doubleclick.net": "0.0.0.0",
-      "securepubads.g.doubleclick.net": "0.0.0.0",
-      "tpc.googlesyndication.com": "0.0.0.0",
-      "afs.googlesyndication.com": "0.0.0.0",
-      "stats.g.doubleclick.net": "0.0.0.0",
-      "ad.doubleclick.net": "0.0.0.0",
-      "partner.googleadservices.com": "0.0.0.0",
-      "pagead2.googleadservices.com": "0.0.0.0",
-      "popads.net": "0.0.0.0",
-      "popcash.net": "0.0.0.0",
-      "propellerads.com": "0.0.0.0",
-      "adcash.com": "0.0.0.0",
-      "exoclick.com": "0.0.0.0",
-      "adsterra.com": "0.0.0.0",
-      "popmyads.com": "0.0.0.0",
-      "adultforce.com": "0.0.0.0",
-      "trafficjunky.com": "0.0.0.0",
-      "clickaine.com": "0.0.0.0",
-      "ad-maven.com": "0.0.0.0",
-      "adpushup.com": "0.0.0.0",
-      "adrecover.com": "0.0.0.0",
-      "blockadblock.com": "0.0.0.0",
-      "admiral.com": "0.0.0.0",
-      "fundingchoices.google.com": "0.0.0.0"
+      "pagead2.googlesyndication.com": "127.0.0.1",
+      "googlesyndication.com": "127.0.0.1",
+      "doubleclick.net": "127.0.0.1",
+      "googleadservices.com": "127.0.0.1",
+      "adservice.google.com": "127.0.0.1",
+      "adsbygoogle.com": "127.0.0.1",
+      "google-analytics.com": "127.0.0.1",
+      "googletagmanager.com": "127.0.0.1",
+      "googletagservices.com": "127.0.0.1",
+      "googleads.g.doubleclick.net": "127.0.0.1",
+      "securepubads.g.doubleclick.net": "127.0.0.1",
+      "tpc.googlesyndication.com": "127.0.0.1",
+      "afs.googlesyndication.com": "127.0.0.1",
+      "stats.g.doubleclick.net": "127.0.0.1",
+      "ad.doubleclick.net": "127.0.0.1",
+      "partner.googleadservices.com": "127.0.0.1",
+      "pagead2.googleadservices.com": "127.0.0.1",
+      "popads.net": "127.0.0.1",
+      "popcash.net": "127.0.0.1",
+      "propellerads.com": "127.0.0.1",
+      "adcash.com": "127.0.0.1",
+      "exoclick.com": "127.0.0.1",
+      "adsterra.com": "127.0.0.1",
+      "popmyads.com": "127.0.0.1",
+      "adultforce.com": "127.0.0.1",
+      "trafficjunky.com": "127.0.0.1",
+      "clickaine.com": "127.0.0.1",
+      "ad-maven.com": "127.0.0.1",
+      "adpushup.com": "127.0.0.1",
+      "adrecover.com": "127.0.0.1",
+      "blockadblock.com": "127.0.0.1",
+      "admiral.com": "127.0.0.1",
+      "fundingchoices.google.com": "127.0.0.1"
     }
   },
   "inbounds": [
@@ -71,10 +71,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -100,10 +98,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -130,10 +126,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -160,10 +154,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -190,10 +182,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -221,10 +211,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -251,10 +239,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -281,10 +267,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -312,10 +296,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -325,8 +307,7 @@
       "tag": "ss-ws",
       "settings": {
         "method": "aes-256-gcm",
-        "password": "virgozki",
-        "network": "tcp,udp"
+        "password": "virgozki"
       },
       "streamSettings": {
         "network": "ws",
@@ -339,10 +320,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -352,8 +331,7 @@
       "tag": "ss-httpupgrade",
       "settings": {
         "method": "aes-256-gcm",
-        "password": "virgozki",
-        "network": "tcp,udp"
+        "password": "virgozki"
       },
       "streamSettings": {
         "network": "httpupgrade",
@@ -366,10 +344,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -379,8 +355,7 @@
       "tag": "ss-xhttp",
       "settings": {
         "method": "aes-256-gcm",
-        "password": "virgozki",
-        "network": "tcp,udp"
+        "password": "virgozki"
       },
       "streamSettings": {
         "network": "xhttp",
@@ -394,10 +369,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -425,10 +398,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -456,10 +427,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -486,10 +455,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     },
     {
@@ -499,8 +466,7 @@
       "tag": "ss-grpc",
       "settings": {
         "method": "aes-256-gcm",
-        "password": "virgozki",
-        "network": "tcp,udp"
+        "password": "virgozki"
       },
       "streamSettings": {
         "network": "grpc",
@@ -514,10 +480,8 @@
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": true
+          "tls"
+        ]
       }
     }
   ],
