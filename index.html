@@ -1533,8 +1533,9 @@
                 return `vmess://${btoa(JSON.stringify(vmessObject)).replace(/=+$/, '')}`;
             }
             case 'shadowsocks': {
+                const alpnParam = selectedTransport === 'xhttp' ? '&alpn=h2%2Chttp%2F1.1' : '';
                 const ssCred = btoa(`${SS_METHOD}:${SS_PASSWORD}`).replace(/=+$/, '');
-                return `ss://${ssCred}@${addr}:443?${transportParam}&security=tls&sni=${encodeURIComponent(sni)}#SS-${selectedTransport.toUpperCase()}-${PROXY_LABELS[selectedProxy]}`;
+                return `ss://${ssCred}@${addr}:443?${transportParam}&security=tls&sni=${encodeURIComponent(sni)}${alpnParam}#SS-${selectedTransport.toUpperCase()}-${PROXY_LABELS[selectedProxy]}`;
             }
             default: return '';
         }
