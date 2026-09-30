@@ -94,21 +94,21 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: trojan_ws
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10000 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10000 }}}}}]}]
   - name: trojan_hu
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: trojan_hu
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10001 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10001 }}}}}]}]
   - name: trojan_xhttp
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: trojan_xhttp
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10002 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10002 }}}}}]}]
 
   # === VMESS ===
   - name: vmess_ws
@@ -118,21 +118,21 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: vmess_ws
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10003 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10003 }}}}}]}]
   - name: vmess_hu
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: vmess_hu
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10004 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10004 }}}}}]}]
   - name: vmess_xhttp
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: vmess_xhttp
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10005 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10005 }}}}}]}]
 
   # === VLESS ===
   - name: vless_ws
@@ -142,21 +142,21 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: vless_ws
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10006 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10006 }}}}}]}]
   - name: vless_hu
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: vless_hu
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10007 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10007 }}}}}]}]
   - name: vless_xhttp
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: vless_xhttp
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10008 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10008 }}}}}]}]
 
   # === SHADOWSOCKS ===
   - name: ss_ws
@@ -166,21 +166,21 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: ss_ws
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10009 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10009 }}}}}]}]
   - name: ss_hu
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: ss_hu
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10010 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10010 }}}}}]}]
   - name: ss_xhttp
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: ss_xhttp
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10011 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10011 }}}}}]}]
 
   # === gRPC CLUSTERS (FORCED HTTP/2) ===
   - name: vless_grpc
@@ -190,7 +190,7 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: vless_grpc
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10012 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10012 }}}}}]}]
   - name: vmess_grpc
     connect_timeout: 3s
     type: STATIC
@@ -198,7 +198,7 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: vmess_grpc
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10013 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10013 }}}}}]}]
   - name: trojan_grpc
     connect_timeout: 3s
     type: STATIC
@@ -206,7 +206,7 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: trojan_grpc
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10014 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10014 }}}}}]}]
   - name: ss_grpc
     connect_timeout: 3s
     type: STATIC
@@ -214,7 +214,7 @@ static_resources:
     http2_protocol_options: {}
     load_assignment:
       cluster_name: ss_grpc
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 10015 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10015 }}}}}]}]
 
   # === OPENRESTY WEB ===
   - name: openresty_web
@@ -223,8 +223,11 @@ static_resources:
     lb_policy: ROUND_ROBIN
     load_assignment:
       cluster_name: openresty_web
-      endpoints: [{ lb_endpoints: [{ endpoint: { socket_address: { address: 127.0.0.1, port_value: 8084 }}}]}]
+      endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 8084 }}}}}]}]
 
 admin:
   access_log_path: /dev/stdout
-  address: { socket_address: { address: 127.0.0.1, port_value: 9901 }}
+  address:
+    socket_address:
+      address: 127.0.0.1
+      port_value: 9901
