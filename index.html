@@ -1081,12 +1081,12 @@
         envoy: 'ENVOY'
     };
 
-    const TRANSPORTS = ['ws', 'httpupgrade', 'xhttp', 'grpc'];
+    // ✅ INAYOS: TINANGGAL ANG LUMA NA gRPC, TUGMA NA SA BAGONG CONFIG
+    const TRANSPORTS = ['ws', 'httpupgrade', 'xhttp'];
     const TRANSPORT_LABELS = {
         ws: 'WEBSOCKET',
         httpupgrade: 'HTTP UPGRADE',
-        xhttp: 'XHTTP',
-        grpc: 'gRPC'
+        xhttp: 'XHTTP'
     };
 
     const PATHS = {
@@ -1110,13 +1110,6 @@
             httpupgrade: '/ss-virgozki-hu',
             xhttp: '/ss-virgozki-xhttp'
         }
-    };
-
-    const GRPC_SERVICES = {
-        vless: 'vless-grpc-virgozki',
-        trojan: 'trojan-grpc-virgozki',
-        vmess: 'vmess-grpc-virgozki',
-        shadowsocks: 'ss-grpc-virgozki'
     };
 
     let selectedProxy = 'openresty';
@@ -1194,7 +1187,7 @@
     const copyBypassBtn2 = document.getElementById('copy-bypass-2');
     const bypassConfig2 = document.getElementById('bypass-config-2');
 
-    /* MUSIC PLAYER */
+    /* MUSIC PLAYER (PINANATILI TULAD NG ORIHINAL) */
     const audio = new Audio();
     audio.volume = 0.7;
     audio.preload = 'none';
@@ -1395,284 +1388,282 @@
     const sniModal = document.getElementById('sni-modal');
     const sniListEl = document.getElementById('sni-list');
     const sniClose = document.getElementById('sni-close');
-    const proxyButtons = document.getElementById('proxy-buttons');
-    const protoButtons = document.getElementById('proto-buttons');
-    const transButtons = document.getElementById('trans-buttons');
-    const player = document.getElementById('floating-player');
 
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    function dragStart(event) {
-        if (event.target.closest('.ctrl-btn')) return;
-        isDragging = true;
-        const rect = player.getBoundingClientRect();
-        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
-        offsetX = clientX - rect.left;
-        offsetY = clientY - rect.top;
-        player.style.transition = 'none';
-    }
-
-    function dragMove(event) {
-        if (!isDragging) return;
-        event.preventDefault();
-        const clientX = event.touches ? event.touches[0].clientX : event.clientX;
-        const clientY = event.touches ? event.touches[0].clientY : event.clientY;
-        const newX = Math.max(0, Math.min(window.innerWidth - player.offsetWidth, clientX - offsetX));
-        const newY = Math.max(0, Math.min(window.innerHeight - player.offsetHeight, clientY - offsetY));
-        player.style.left = `${newX}px`;
-        player.style.top = `${newY}px`;
-        player.style.right = 'auto';
-        player.style.bottom = 'auto';
-    }
-
-    function dragEnd() {
-        isDragging = false;
-        player.style.transition = 'all 0.2s ease';
-    }
-
-    player.addEventListener('mousedown', dragStart);
-    player.addEventListener('touchstart', dragStart, { passive: true });
-    document.addEventListener('mousemove', dragMove);
-    document.addEventListener('touchmove', dragMove, { passive: false });
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
-
-    function getPublicPath() {
-        if (selectedTransport === 'grpc') return '';
-        const protocolPaths = PATHS[selectedProtocol];
-        if (!protocolPaths || !protocolPaths[selectedTransport]) return '';
-        return protocolPaths[selectedTransport];
-    }
-
-    function getGrpcService() {
-        return GRPC_SERVICES[selectedProtocol];
-    }
-
-    /* BUILD CONFIG COMPATIBLE WITH CONFIG.JSON & ENVOY.YAML (UPDATED FOR XHTTP) */
-    function buildConfig() {
-        const addr = selectedAddress;
-        const sni = selectedSNI;
-        const host = currentHost;
-
-        if (selectedTransport === 'grpc') {
-            const grpcService = getGrpcService();
-            if (!grpcService) return '';
-
-            switch (selectedProtocol) {
-                case 'vless':
-                    return `vless://${UUID}@${addr}:443?encryption=none&security=tls&type=grpc&serviceName=${encodeURIComponent(grpcService)}&authority=${encodeURIComponent(host)}&sni=${encodeURIComponent(sni)}&alpn=h2&fp=chrome#VLESS-GRPC-${PROXY_LABELS[selectedProxy]}`;
-                case 'trojan':
-                    return `trojan://${encodeURIComponent(TROJAN_PASSWORD)}@${addr}:443?security=tls&type=grpc&serviceName=${encodeURIComponent(grpcService)}&authority=${encodeURIComponent(host)}&sni=${encodeURIComponent(sni)}&alpn=h2&fp=chrome#TROJAN-GRPC-${PROXY_LABELS[selectedProxy]}`;
-                case 'vmess': {
-                    const vmessObject = {
-                        v: '2', ps: `VMESS-GRPC-${PROXY_LABELS[selectedProxy]}`, add: addr, port: '443', id: UUID, aid: '0', scy: 'auto', net: 'grpc', type: 'none', host: host, path: grpcService, tls: 'tls', sni: sni, fp: 'chrome', alpn: 'h2'
-                    };
-                    return `vmess://${btoa(JSON.stringify(vmessObject)).replace(/=+$/, '')}`;
-                }
-                case 'shadowsocks': {
-                    const ssGrpcCred = btoa(`${SS_METHOD}:${SS_PASSWORD}`).replace(/=+$/, '');
-                    return `ss://${ssGrpcCred}@${addr}:443?type=grpc&serviceName=${encodeURIComponent(grpcService)}&security=tls&sni=${encodeURIComponent(sni)}&alpn=h2#SS-GRPC-${PROXY_LABELS[selectedProxy]}`;
-                }
-                default: return '';
-            }
-        }
-
-        const path = getPublicPath();
-        let transportParam = '';
-
-        switch (selectedTransport) {
-            case 'ws':
-                transportParam = `type=ws&path=${encodeURIComponent(path)}&host=${encodeURIComponent(host)}`;
-                break;
-            case 'httpupgrade':
-                transportParam = `type=httpupgrade&path=${encodeURIComponent(path)}&host=${encodeURIComponent(host)}`;
-                break;
-            case 'xhttp':
-                /* MATCHED WITH CONFIG.JSON (mode=auto & extra={"mode":"auto"}) */
-                transportParam = `type=xhttp&path=${encodeURIComponent(path)}&host=${encodeURIComponent(host)}&mode=auto&extra=%7B%22mode%22%3A%22auto%22%7D`;
-                break;
-            default:
-                transportParam = '';
-        }
-
-        switch (selectedProtocol) {
-            case 'vless': {
-                const alpn = selectedTransport === 'xhttp' ? 'h2%2Chttp%2F1.1' : 'http%2F1.1';
-                return `vless://${UUID}@${addr}:443?encryption=none&${transportParam}&security=tls&fp=chrome&sni=${encodeURIComponent(sni)}&alpn=${alpn}#VLESS-${selectedTransport.toUpperCase()}-${PROXY_LABELS[selectedProxy]}`;
-            }
-            case 'trojan': {
-                const alpn = selectedTransport === 'xhttp' ? 'h2%2Chttp%2F1.1' : 'http%2F1.1';
-                return `trojan://${encodeURIComponent(TROJAN_PASSWORD)}@${addr}:443?${transportParam}&security=tls&fp=chrome&sni=${encodeURIComponent(sni)}&alpn=${alpn}#TROJAN-${selectedTransport.toUpperCase()}-${PROXY_LABELS[selectedProxy]}`;
-            }
-            case 'vmess': {
-                const alpn = selectedTransport === 'xhttp' ? 'h2,http/1.1' : 'http/1.1';
-                const vmessObject = {
-                    v: '2',
-                    ps: `VMESS-${selectedTransport.toUpperCase()}-${PROXY_LABELS[selectedProxy]}`,
-                    add: addr,
-                    port: '443',
-                    id: UUID,
-                    aid: '0',
-                    scy: 'auto',
-                    net: selectedTransport,
-                    type: 'none',
-                    host: host,
-                    path: path,
-                    tls: 'tls',
-                    sni: sni,
-                    fp: 'chrome',
-                    alpn: alpn
-                };
-                if (selectedTransport === 'xhttp') {
-                    vmessObject.mode = 'auto';
-                    vmessObject.extra = { mode: 'auto' };
-                }
-                return `vmess://${btoa(JSON.stringify(vmessObject)).replace(/=+$/, '')}`;
-            }
-            case 'shadowsocks': {
-                const alpnParam = selectedTransport === 'xhttp' ? '&alpn=h2%2Chttp%2F1.1' : '';
-                const ssCred = btoa(`${SS_METHOD}:${SS_PASSWORD}`).replace(/=+$/, '');
-                return `ss://${ssCred}@${addr}:443?${transportParam}&security=tls&sni=${encodeURIComponent(sni)}${alpnParam}#SS-${selectedTransport.toUpperCase()}-${PROXY_LABELS[selectedProxy]}`;
-            }
-            default: return '';
-        }
-    }
-
-    function buildList(container, items, type) {
-        container.innerHTML = '';
-        items.forEach(function (item) {
-            const el = document.createElement('div');
-            el.className = 'modal-item';
-
-            if (item.startsWith('---')) {
-                el.style.color = 'var(--neon-purple)';
-                el.style.cursor = 'default';
-                el.style.fontWeight = '700';
-                el.addEventListener('click', e => e.preventDefault());
-            } else {
-                el.addEventListener('click', function () {
-                    if (type === 'address') {
-                        selectedAddress = item;
-                        addressSelected.textContent = 'TARGET SET: ' + item;
-                        addressBtnTxt.textContent = item;
-                        addLog('Target address selected', 'success');
-                        addressModal.classList.remove('show');
-                    } else {
-                        selectedSNI = item;
-                        sniSelected.textContent = 'SNI SET: ' + item;
-                        sniBtnTxt.textContent = item;
-                        addLog('SNI selected', 'success');
-                        sniModal.classList.remove('show');
-                    }
-                    updateUI();
-                });
-            }
-            el.textContent = item;
-            container.appendChild(el);
-        });
-    }
-
-    function buildOptions(container, items, activeItem, labels) {
-        container.innerHTML = '';
-        items.forEach(function (item) {
-            const button = document.createElement('button');
-            button.className = 'switch-btn' + (item === activeItem ? ' active' : '');
-            button.textContent = labels[item] || item;
-
-            button.addEventListener('click', function () {
-                if (isProcessing) return;
-                isProcessing = true;
-
-                container.querySelectorAll('.switch-btn').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                if (container === proxyButtons) selectedProxy = item;
-                if (container === protoButtons) selectedProtocol = item;
-                if (container === transButtons) selectedTransport = item;
-
-                addLog('Selected: ' + (labels[item] || item), 'success');
-                updateUI();
-
-                setTimeout(() => { isProcessing = false; }, 200);
-            });
-            container.appendChild(button);
-        });
-    }
-
-    function updateUI() {
-        infoHost.textContent = selectedAddress;
-        infoSni.textContent = selectedSNI;
-        infoProto.textContent = PROTOCOL_LABELS[selectedProtocol];
-        infoTransport.textContent = TRANSPORT_LABELS[selectedTransport];
-        infoProxy.textContent = PROXY_LABELS[selectedProxy];
-        configDisplay.value = buildConfig();
-
-        buildOptions(proxyButtons, PROXY_ENGINES, selectedProxy, PROXY_LABELS);
-        buildOptions(protoButtons, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS);
-        buildOptions(transButtons, TRANSPORTS, selectedTransport, TRANSPORT_LABELS);
-    }
-
-    async function copyText(text, button, originalLabel, successLabel) {
-        try {
-            await navigator.clipboard.writeText(text);
-            button.textContent = successLabel;
-            setTimeout(() => { button.textContent = originalLabel; }, 2000);
-            addLog('Configuration copied', 'success');
-        } catch (error) {
-            addLog('Copy permission denied', 'info');
-        }
-    }
-
-    copyBtn.addEventListener('click', () => copyText(configDisplay.value, copyBtn, 'COPY', 'COPIED ✓'));
-    copyBypassBtn1.addEventListener('click', () => copyText(bypassConfig1.value, copyBypassBtn1, 'COPY', 'COPIED ✓'));
-    copyBypassBtn2.addEventListener('click', () => copyText(bypassConfig2.value, copyBypassBtn2, 'COPY', 'COPIED ✓'));
-
-    addressBtn.addEventListener('click', () => {
-        buildList(addressListEl, addressList, 'address');
-        addressModal.classList.add('show');
-        addLog('Opening address list', 'info');
+// ==============================================
+// BUILD DYNAMIC BUTTONS
+// ==============================================
+function buildButtons() {
+    // Proxy Engines
+    const proxyContainer = document.getElementById('proxy-buttons');
+    proxyContainer.innerHTML = '';
+    PROXY_ENGINES.forEach(engine => {
+        const btn = document.createElement('button');
+        btn.className = `switch-btn ${selectedProxy === engine ? 'active' : ''}`;
+        btn.textContent = PROXY_LABELS[engine];
+        btn.onclick = () => {
+            selectedProxy = engine;
+            buildButtons();
+            updateConfig();
+            addLog(`Proxy engine set to ${PROXY_LABELS[engine]}`, 'info');
+        };
+        proxyContainer.appendChild(btn);
     });
 
-    addressClose.addEventListener('click', () => addressModal.classList.remove('show'));
-
-    sniBtn.addEventListener('click', () => {
-        buildList(sniListEl, sniList, 'sni');
-        sniModal.classList.add('show');
-        addLog('Opening SNI list', 'info');
+    // Protocols
+    const protoContainer = document.getElementById('proto-buttons');
+    protoContainer.innerHTML = '';
+    PROTOCOLS.forEach(proto => {
+        const btn = document.createElement('button');
+        btn.className = `switch-btn ${selectedProtocol === proto ? 'active' : ''}`;
+        btn.textContent = PROTOCOL_LABELS[proto];
+        btn.onclick = () => {
+            selectedProtocol = proto;
+            selectedTransport = 'ws'; // reset to default
+            buildButtons();
+            updateConfig();
+            addLog(`Protocol set to ${PROTOCOL_LABELS[proto]}`, 'info');
+        };
+        protoContainer.appendChild(btn);
     });
 
-    sniClose.addEventListener('click', () => sniModal.classList.remove('show'));
+    // Transports
+    const transContainer = document.getElementById('trans-buttons');
+    transContainer.innerHTML = '';
+    TRANSPORTS.forEach(trans => {
+        const btn = document.createElement('button');
+        btn.className = `switch-btn ${selectedTransport === trans ? 'active' : ''}`;
+        btn.textContent = TRANSPORT_LABELS[trans];
+        btn.onclick = () => {
+            selectedTransport = trans;
+            buildButtons();
+            updateConfig();
+            addLog(`Transport set to ${TRANSPORT_LABELS[trans]}`, 'info');
+        };
+        transContainer.appendChild(btn);
+    });
+}
 
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
+// ==============================================
+// MODAL POPULATE & HANDLERS
+// ==============================================
+function buildAddressList() {
+    addressListEl.innerHTML = '';
+    addressList.forEach(addr => {
+        if (addr.startsWith('---')) {
+            const sep = document.createElement('div');
+            sep.style.padding = '8px';
+            sep.style.color = 'var(--text-dim)';
+            sep.style.fontSize = '10px';
+            sep.style.textAlign = 'center';
+            sep.textContent = addr;
+            addressListEl.appendChild(sep);
+            return;
+        }
+        const item = document.createElement('div');
+        item.className = `modal-item ${selectedAddress === addr ? 'selected' : ''}`;
+        item.textContent = addr;
+        item.onclick = () => {
+            selectedAddress = addr;
+            addressBtnTxt.textContent = addr.length > 28 ? addr.slice(0,25)+'...' : addr;
+            addressSelected.textContent = `SELECTED: ${addr}`;
             addressModal.classList.remove('show');
-            sniModal.classList.remove('show');
+            updateConfig();
+            addLog(`Target host set to ${addr}`, 'success');
+        };
+        addressListEl.appendChild(item);
+    });
+}
+
+function buildSniList() {
+    sniListEl.innerHTML = '';
+    sniList.forEach(sni => {
+        if (sni.startsWith('---')) {
+            const sep = document.createElement('div');
+            sep.style.padding = '8px';
+            sep.style.color = 'var(--text-dim)';
+            sep.style.fontSize = '10px';
+            sep.style.textAlign = 'center';
+            sep.textContent = sni;
+            sniListEl.appendChild(sep);
+            return;
         }
+        const item = document.createElement('div');
+        item.className = `modal-item ${selectedSNI === sni ? 'selected' : ''}`;
+        item.textContent = sni;
+        item.onclick = () => {
+            selectedSNI = sni;
+            sniBtnTxt.textContent = sni.length > 28 ? sni.slice(0,25)+'...' : sni;
+            sniSelected.textContent = `SELECTED: ${sni}`;
+            sniModal.classList.remove('show');
+            updateConfig();
+            addLog(`SNI set to ${sni}`, 'success');
+        };
+        sniListEl.appendChild(item);
     });
+}
 
-    window.addEventListener('load', function () {
-        loadSong(currentSongIndex);
+addressBtn.onclick = () => {
+    buildAddressList();
+    addressModal.classList.add('show');
+};
+addressClose.onclick = () => addressModal.classList.remove('show');
 
-        setTimeout(function () {
-            loadingScreen.classList.add('hidden');
-            mainContent.style.display = 'flex';
+sniBtn.onclick = () => {
+    buildSniList();
+    sniModal.classList.add('show');
+};
+sniClose.onclick = () => sniModal.classList.remove('show');
 
-            updateUI();
-            fetchUserInfo();
-            measurePing();
+// Close modal on outside click
+window.addEventListener('click', e => {
+    if (e.target === addressModal) addressModal.classList.remove('show');
+    if (e.target === sniModal) sniModal.classList.remove('show');
+});
 
-            setInterval(updateMonitorUptime, 1000);
-            setInterval(updateGraph, 1200);
-            setInterval(measurePing, 10000);
+// ==============================================
+// GENERATE FINAL CONFIG
+// ==============================================
+function updateConfig() {
+    infoHost.textContent = selectedAddress;
+    infoSni.textContent = selectedSNI;
+    infoProto.textContent = PROTOCOL_LABELS[selectedProtocol];
+    infoTransport.textContent = TRANSPORT_LABELS[selectedTransport];
+    infoProxy.textContent = PROXY_LABELS[selectedProxy];
 
-            addLog('System interface loaded', 'success');
-            addLog('TLS configuration generator ready', 'success');
-            addLog('XHTTP settings synchronized with backend', 'success');
-        }, 3500);
-    });
+    const path = PATHS[selectedProtocol][selectedTransport];
+    let configText = '';
+
+    // VLESS
+    if (selectedProtocol === 'vless') {
+        configText = `vless://${UUID}@${selectedAddress}:443?path=${encodeURIComponent(path)}&security=tls&sni=${selectedSNI}&type=${selectedTransport}&&alpn=h2,http/1.1&pbk=&sid=&spk=&fp=chrome#VIRGOZKI-${PROTOCOL_LABELS[selectedProtocol]}-${TRANSPORT_LABELS[selectedTransport]}`;
+    }
+    // TROJAN
+    else if (selectedProtocol === 'trojan') {
+        configText = `trojan://${TROJAN_PASSWORD}@${selectedAddress}:443?path=${encodeURIComponent(path)}&security=tls&sni=${selectedSNI}&type=${selectedTransport}&&alpn=h2,http/1.1&fp=chrome#VIRGOZKI-${PROTOCOL_LABELS[selectedProtocol]}-${TRANSPORT_LABELS[selectedTransport]}`;
+    }
+    // VMESS
+    else if (selectedProtocol === 'vmess') {
+        const vmessObj = {
+            v: '2',
+            ps: `VIRGOZKI-${PROTOCOL_LABELS[selectedProtocol]}-${TRANSPORT_LABELS[selectedTransport]}`,
+            add: selectedAddress,
+            port: '443',
+            id: UUID,
+            aid: '0',
+            scy: 'auto',
+            net: selectedTransport,
+            path: path,
+            host: selectedSNI,
+            tls: 'tls',
+            sni: selectedSNI,
+            alpn: 'h2,http/1.1',
+            fp: 'chrome'
+        };
+        configText = `vmess://${btoa(JSON.stringify(vmessObj))}`;
+    }
+    // SHADOWSOCKS
+    else if (selectedProtocol === 'shadowsocks') {
+        configText = `ss://${btoa(`${SS_METHOD}:${SS_PASSWORD}`)}@${selectedAddress}:443?plugin=v2ray-plugin&plugin=${encodeURIComponent(`tls;host=${selectedSNI};path=${path};mode=${selectedTransport}`)}#VIRGOZKI-${PROTOCOL_LABELS[selectedProtocol]}-${TRANSPORT_LABELS[selectedTransport]}`;
+    }
+
+    configDisplay.value = configText;
+}
+
+// Copy Functions
+copyBtn.onclick = async () => {
+    if (!configDisplay.value || configDisplay.value === 'WAITING FOR INPUT...') return;
+    try {
+        await navigator.clipboard.writeText(configDisplay.value);
+        addLog('Config copied to clipboard', 'success');
+        copyBtn.textContent = 'COPIED ✓';
+        setTimeout(() => copyBtn.textContent = 'COPY', 2000);
+    } catch {
+        addLog('Copy failed', 'info');
+    }
+};
+
+copyBypassBtn1.onclick = async () => {
+    if (!bypassConfig1.value || bypassConfig1.value === 'NO FILES') return;
+    try {
+        await navigator.clipboard.writeText(bypassConfig1.value);
+        addLog('Bypass 1 copied', 'success');
+        copyBypassBtn1.textContent = 'COPIED ✓';
+        setTimeout(() => copyBypassBtn1.textContent = 'COPY', 2000);
+    } catch {
+        addLog('Copy failed', 'info');
+    }
+};
+
+copyBypassBtn2.onclick = async () => {
+    if (!bypassConfig2.value || bypassConfig2.value === 'NO FILES') return;
+    try {
+        await navigator.clipboard.writeText(bypassConfig2.value);
+        addLog('Bypass 2 copied', 'success');
+        copyBypassBtn2.textContent = 'COPIED ✓';
+        setTimeout(() => copyBypassBtn2.textContent = 'COPY', 2000);
+    } catch {
+        addLog('Copy failed', 'info');
+    }
+};
+
+// ==============================================
+// DRAGGABLE FLOATING PLAYER
+// ==============================================
+const player = document.getElementById('floating-player');
+let isDragging = false, offsetX, offsetY;
+
+player.addEventListener('mousedown', e => {
+    isDragging = true;
+    offsetX = e.clientX - player.getBoundingClientRect().left;
+    offsetY = e.clientY - player.getBoundingClientRect().top;
+});
+document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const w = window.innerWidth - player.offsetWidth;
+    const h = window.innerHeight - player.offsetHeight;
+    player.style.left = Math.max(0, Math.min(w, e.clientX - offsetX)) + 'px';
+    player.style.top = Math.max(0, Math.min(h, e.clientY - offsetY)) + 'px';
+});
+document.addEventListener('mouseup', () => isDragging = false);
+
+// Touch support
+player.addEventListener('touchstart', e => {
+    isDragging = true;
+    const t = e.touches[0];
+    offsetX = t.clientX - player.getBoundingClientRect().left;
+    offsetY = t.clientY - player.getBoundingClientRect().top;
+});
+document.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const t = e.touches[0];
+    const w = window.innerWidth - player.offsetWidth;
+    const h = window.innerHeight - player.offsetHeight;
+    player.style.left = Math.max(0, Math.min(w, t.clientX - offsetX)) + 'px';
+    player.style.top = Math.max(0, Math.min(h, t.clientY - offsetY)) + 'px';
+});
+document.addEventListener('touchend', () => isDragging = false);
+
+// ==============================================
+// INITIALIZE SYSTEM
+// ==============================================
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+        mainContent.style.display = 'flex';
+
+        buildButtons();
+        updateConfig();
+        fetchUserInfo();
+        measurePing();
+
+        setInterval(updateMonitorUptime, 1000);
+        setInterval(updateGraph, 1200);
+        setInterval(measurePing, 15000);
+
+        addLog('System initialized successfully', 'success');
+        addLog('VIRGOZKI Panel v2.6.0 loaded', 'info');
+    }, 3500);
+});
 
 })();
 </script>
