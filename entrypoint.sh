@@ -18,11 +18,19 @@ mkdir -p /var/log/xray \
          /tmp/virgozki \
          /tmp/virgozki-logs
 
-# Dynamically bind Envoy port if Cloud Run passes a custom PORT
+# Safely update Envoy port and address using Python YAML/Text parsing
 if [ -f /etc/envoy/envoy.yaml ]; then
-    sed -i "s/port_value: 8080/port_value: ${PORT}/g" /etc/envoy/envoy.yaml
-    sed -i "s/address: 0.0.0.0/address: ${BIND_ADDR}/g" /etc/envoy/envoy.yaml
-    echo "[ENTRYPOINT] Configured Envoy port to ${PORT}"
+    python3 -c "
+import re
+with open('/etc/envoy/envoy.yaml', 'r') as f:
+    content = f.read()
+# Palitan ang port at bind address sa main_listener
+content = re.sub(r'(address:\s+address:\s+)[0-9\.]+', r'\1' + '${BIND_ADDR}', content)
+content = re.sub(r'(port_value:\s+)[0-9]+', r'\1' + '${PORT}', content, count=1)
+with open('/etc/envoy/envoy.yaml', 'w') as f:
+    f.write(content)
+"
+    echo "[ENTRYPOINT] Successfully configured Envoy port to ${PORT} and address to ${BIND_ADDR}"
 fi
 
 # Validate core configurations at runtime
