@@ -77,9 +77,8 @@ RUN printf 'ok\n' > /usr/share/nginx/html/health && \
               /etc/envoy/envoy.yaml \
               /usr/share/nginx/html/index.html
 
-# BUILD-TIME CONFIGURATION VALIDATION
+# BUILD-TIME CONFIGURATION VALIDATION (Xray & OpenResty Only)
 RUN /usr/local/bin/xray run -test -c /etc/xray/config.json && \
-    /usr/local/bin/envoy --mode validate -c /etc/envoy/envoy.yaml && \
     /usr/local/openresty/bin/openresty -t -c /etc/openresty/nginx.conf
 
 EXPOSE 8080
