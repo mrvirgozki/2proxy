@@ -62,7 +62,7 @@
       "settings": {"clients": [{"password": "virgozki"}]},
       "streamSettings": {
         "network": "xhttp", "security": "none",
-        "xhttpSettings": {"path": "/virgozki-xhttp", "mode": "stream-one"}
+        "xhttpSettings": {"path": "/virgozki-xhttp", "mode": "auto"}
       },
       "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
     },
@@ -83,7 +83,7 @@
       "settings": {"clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811", "alterId": 0}]},
       "streamSettings": {
         "network": "xhttp", "security": "none",
-        "xhttpSettings": {"path": "/vmess-virgozki-xhttp", "mode": "stream-one"}
+        "xhttpSettings": {"path": "/vmess-virgozki-xhttp", "mode": "auto"}
       },
       "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
     },
@@ -104,7 +104,7 @@
       "settings": {"clients": [{"id": "b831381d-6324-4d53-ad4f-8cda48b30811"}], "decryption": "none"},
       "streamSettings": {
         "network": "xhttp", "security": "none",
-        "xhttpSettings": {"path": "/vless-virgozki-xhttp", "mode": "stream-one"}
+        "xhttpSettings": {"path": "/vless-virgozki-xhttp", "mode": "auto"}
       },
       "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
     },
@@ -125,7 +125,7 @@
       "settings": {"method": "aes-256-gcm", "password": "virgozki"},
       "streamSettings": {
         "network": "xhttp", "security": "none",
-        "xhttpSettings": {"path": "/ss-virgozki-xhttp", "mode": "stream-one"}
+        "xhttpSettings": {"path": "/ss-virgozki-xhttp", "mode": "auto"}
       },
       "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
     },
