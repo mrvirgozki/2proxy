@@ -45,7 +45,7 @@ static_resources:
                   - match: { prefix: /ss-virgozki-xhttp }
                     route: { cluster: ss_xhttp, timeout: 0s, idle_timeout: 3600s }
 
-                  # === gRPC / STREAM-UP XHTTP ROUTES ===
+                  # === gRPC ROUTES ===
                   - match: { prefix: /vless-grpc-virgozki }
                     route: { cluster: vless_grpc, timeout: 0s, idle_timeout: 3600s }
                   - match: { prefix: /vmess-grpc-virgozki }
@@ -105,6 +105,7 @@ static_resources:
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
+    http2_protocol_options: {}
     load_assignment:
       cluster_name: trojan_xhttp
       endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10002 }}}}}]}]
@@ -129,6 +130,7 @@ static_resources:
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
+    http2_protocol_options: {}
     load_assignment:
       cluster_name: vmess_xhttp
       endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10005 }}}}}]}]
@@ -153,6 +155,7 @@ static_resources:
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
+    http2_protocol_options: {}
     load_assignment:
       cluster_name: vless_xhttp
       endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10008 }}}}}]}]
@@ -177,11 +180,12 @@ static_resources:
     connect_timeout: 3s
     type: STATIC
     lb_policy: ROUND_ROBIN
+    http2_protocol_options: {}
     load_assignment:
       cluster_name: ss_xhttp
       endpoints: [{ lb_endpoints: [{ endpoint: { address: { socket_address: { address: 127.0.0.1, port_value: 10011 }}}}}]}]
 
-  # === gRPC / XHTTP STREAM-UP CLUSTERS ===
+  # === gRPC CLUSTERS ===
   - name: vless_grpc
     connect_timeout: 3s
     type: STATIC
